@@ -7,7 +7,7 @@
 [![Flutter](https://img.shields.io/badge/Flutter-3.8.1-blue?logo=flutter&logoColor=white)](https://flutter.dev)  
 [![Dart](https://img.shields.io/badge/Dart-3.0-blue?logo=dart&logoColor=white)](https://dart.dev)  
 [![Version](https://img.shields.io/badge/version-1.0.0+-green)]()  
-[![License](https://img.shields.io/badge/license-Unpublished-lightgrey)]()  
+
 
 **Organibot** is an AI-powered chatbot designed for **learning and collaborating in organic chemistry**. Using Gemini AI, it provides interactive learning, explanations, and problem-solving support for students and enthusiasts.  
 
@@ -109,6 +109,6 @@ Organibot is open for collaboration. To contribute:
 ---
 
 
-
+[Download this app](https://upload.app/download/organigpt/com.example.organibot/7d1744730ce2186e6e483afeb87516c96e7e6153e1185973da964ca02c1de79f/)
 
 
