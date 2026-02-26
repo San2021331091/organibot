@@ -15,10 +15,22 @@ class _HomeScreenState extends State<HomeScreen> {
   int selectedIndex = 0;
   final TextEditingController searchController = TextEditingController();
 
+  void sendMessage() {
+    final text = searchController.text.trim();
+    if (text.isNotEmpty) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ChatScreen(query: text),
+        ),
+      );
+      searchController.clear();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      /// ---------------- AppBar ----------------
       appBar: AppBar(
         backgroundColor: Colors.green[800],
         title: Text.rich(
@@ -28,7 +40,8 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               TextSpan(
                 text: "GPT",
-                style: AppTextStyles.headlineMedium(color: Colors.lightGreenAccent),
+                style: AppTextStyles.headlineMedium(
+                    color: Colors.lightGreenAccent),
               ),
             ],
           ),
@@ -42,7 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 borderRadius: BorderRadius.circular(100),
               ),
               child: IconButton(
-                icon: const Icon(Icons.face,color: Colors.white,),
+                icon: const Icon(Icons.face, color: Colors.white),
                 onPressed: () {},
               ),
             ),
@@ -50,11 +63,13 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
 
-      /// ---------------- Body ----------------
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [AppColors.mediumGreenColor, AppColors.lightGreenColor],
+            colors: [
+              AppColors.mediumGreenColor,
+              AppColors.lightGreenColor
+            ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -72,21 +87,25 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   Row(
                     children: [
-                      const Icon(Icons.chat_bubble_outline, color: Colors.white, size: 22),
+                      const Icon(Icons.chat_bubble_outline,
+                          color: Colors.white, size: 22),
                       const SizedBox(width: 6),
                       Text(
                         "New chat",
-                        style: AppTextStyles.bodyLarge(color: Colors.white),
+                        style:
+                            AppTextStyles.bodyLarge(color: Colors.white),
                       ),
                     ],
                   ),
                   Row(
                     children: [
-                      const Icon(Icons.history, color: Colors.white, size: 22),
+                      const Icon(Icons.history,
+                          color: Colors.white, size: 22),
                       const SizedBox(width: 6),
                       Text(
                         "History",
-                        style: AppTextStyles.bodyLarge(color: Colors.white),
+                        style:
+                            AppTextStyles.bodyLarge(color: Colors.white),
                       ),
                     ],
                   ),
@@ -104,27 +123,21 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   TextField(
                     controller: searchController,
-                    style: AppTextStyles.bodyMedium(color: Colors.white70),
+                    style: AppTextStyles.bodyMedium(
+                        color: Colors.white70),
+                    minLines: 1,
                     maxLines: 6,
-                    onSubmitted: (value) {
-                      if (value.trim().isNotEmpty) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                ChatScreen(query: value.trim()),
-                          ),
-                        );
-                        searchController.clear();
-                      }
-                    },
+                    keyboardType: TextInputType.multiline,
+                    textInputAction: TextInputAction.newline,
                     decoration: InputDecoration(
                       hintText: "Write a question!",
-                      hintStyle: AppTextStyles.bodyLarge(color: Colors.white38),
+                      hintStyle: AppTextStyles.bodyLarge(
+                          color: Colors.white38),
                       filled: true,
                       fillColor: Colors.green.shade800,
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius:
+                            BorderRadius.circular(12),
                         borderSide: BorderSide.none,
                       ),
                     ),
@@ -132,48 +145,56 @@ class _HomeScreenState extends State<HomeScreen> {
 
                   /// Send Button Row
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment:
+                        MainAxisAlignment.spaceBetween,
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(4),
                         child: Container(
                           decoration: BoxDecoration(
                             color: Colors.white10,
-                            borderRadius: BorderRadius.circular(100),
+                            borderRadius:
+                                BorderRadius.circular(100),
                           ),
                           child: const Padding(
                             padding: EdgeInsets.all(4.0),
-                            child: Icon(Icons.mic, color: Colors.white, size: 28),
+                            child: Icon(Icons.mic,
+                                color: Colors.white,
+                                size: 28),
                           ),
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding:
+                            const EdgeInsets.all(8.0),
                         child: InkWell(
-                          onTap: () {
-                            if (searchController.text.trim().isNotEmpty) {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => ChatScreen(
-                                      query: searchController.text.trim()),
-                                ),
-                              );
-                              searchController.clear();
-                            }
-                          },
+                          onTap: sendMessage,
                           child: Container(
                             decoration: BoxDecoration(
                               gradient: LinearGradient(
-                                colors: [AppColors.deepGreenAccentColor,AppColors.lightGreenAccentColor] ,
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
+                                colors: [
+                                  AppColors
+                                      .deepGreenAccentColor,
+                                  AppColors
+                                      .lightGreenAccentColor
+                                ],
+                                begin:
+                                    Alignment.topLeft,
+                                end: Alignment
+                                    .bottomRight,
                               ),
-                              borderRadius: BorderRadius.circular(12),
+                              borderRadius:
+                                  BorderRadius
+                                      .circular(12),
                             ),
                             child: const Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-                              child: Icon(Icons.send, color: Colors.white, size: 24),
+                              padding:
+                                  EdgeInsets.symmetric(
+                                      horizontal: 16,
+                                      vertical: 6),
+                              child: Icon(Icons.send,
+                                  color: Colors.white,
+                                  size: 24),
                             ),
                           ),
                         ),
@@ -190,8 +211,10 @@ class _HomeScreenState extends State<HomeScreen> {
             SizedBox(
               height: 40,
               child: ListView.builder(
-                itemCount: AppConstant.defaultQues.length,
-                scrollDirection: Axis.horizontal,
+                itemCount:
+                    AppConstant.defaultQues.length,
+                scrollDirection:
+                    Axis.horizontal,
                 itemBuilder: (context, index) {
                   return InkWell(
                     onTap: () {
@@ -200,21 +223,38 @@ class _HomeScreenState extends State<HomeScreen> {
                       });
                     },
                     child: Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 8),
+                      margin:
+                          const EdgeInsets.symmetric(
+                              horizontal: 8),
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        border: index == selectedIndex
-                            ? Border.all(width: 1, color: Colors.lightGreenAccent)
+                        borderRadius:
+                            BorderRadius.circular(8),
+                        border: index ==
+                                selectedIndex
+                            ? Border.all(
+                                width: 1,
+                                color: Colors
+                                    .lightGreenAccent)
                             : null,
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 9),
+                        padding:
+                            const EdgeInsets.symmetric(
+                                horizontal: 9),
                         child: Center(
                           child: Text(
-                            AppConstant.defaultQues[index]["title"],
-                            style: index == selectedIndex
-                                ? AppTextStyles.bodyLarge(color: Colors.lightGreenAccent)
-                                : AppTextStyles.bodyMedium(color: Colors.white60),
+                            AppConstant.defaultQues[
+                                    index]["title"],
+                            style: index ==
+                                    selectedIndex
+                                ? AppTextStyles
+                                    .bodyLarge(
+                                        color: Colors
+                                            .lightGreenAccent)
+                                : AppTextStyles
+                                    .bodyMedium(
+                                        color: Colors
+                                            .white60),
                           ),
                         ),
                       ),
@@ -229,46 +269,80 @@ class _HomeScreenState extends State<HomeScreen> {
             /// Grid Questions
             Expanded(
               child: GridView.builder(
-                itemCount: AppConstant.defaultQues[selectedIndex]['question'].length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                itemCount: AppConstant
+                    .defaultQues[selectedIndex]
+                        ['question']
+                    .length,
+                gridDelegate:
+                    const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisSpacing: 8,
                   mainAxisSpacing: 8,
                   crossAxisCount: 2,
                 ),
-                itemBuilder: (context, index) {
-                  final data = AppConstant.defaultQues[selectedIndex]['question'][index];
+                itemBuilder:
+                    (context, index) {
+                  final data = AppConstant
+                          .defaultQues[
+                      selectedIndex]
+                      ['question'][index];
 
                   return InkWell(
                     onTap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => ChatScreen(query: data['ques']),
+                          builder: (context) =>
+                              ChatScreen(
+                                  query:
+                                      data['ques']),
                         ),
                       );
                     },
                     child: Container(
                       decoration: BoxDecoration(
-                        color: Colors.green.shade800,
-                        borderRadius: BorderRadius.circular(10),
+                        color: Colors
+                            .green.shade800,
+                        borderRadius:
+                            BorderRadius
+                                .circular(10),
                       ),
-                      padding: const EdgeInsets.all(8),
+                      padding:
+                          const EdgeInsets.all(
+                              8),
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment:
+                            MainAxisAlignment
+                                .center,
+                        crossAxisAlignment:
+                            CrossAxisAlignment
+                                .start,
                         children: [
                           Expanded(
                             child: Align(
-                              alignment: Alignment.bottomLeft,
+                              alignment:
+                                  Alignment
+                                      .bottomLeft,
                               child: Container(
-                                margin: const EdgeInsets.symmetric(vertical: 11),
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: data['color'],
+                                margin: const EdgeInsets
+                                    .symmetric(
+                                        vertical:
+                                            11),
+                                decoration:
+                                    BoxDecoration(
+                                  shape: BoxShape
+                                      .circle,
+                                  color:
+                                      data['color'],
                                 ),
                                 child: Padding(
-                                  padding: const EdgeInsets.all(4.0),
-                                  child: Icon(data['icon'], size: 28),
+                                  padding:
+                                      const EdgeInsets
+                                          .all(4.0),
+                                  child: Icon(
+                                      data[
+                                          'icon'],
+                                      size:
+                                          28),
                                 ),
                               ),
                             ),
@@ -276,8 +350,13 @@ class _HomeScreenState extends State<HomeScreen> {
                           Expanded(
                             child: Text(
                               data['ques'],
-                              style: AppTextStyles.bodyMedium(
-                                  color: Colors.white, fontWeight: FontWeight.bold),
+                              style: AppTextStyles
+                                  .bodyMedium(
+                                      color: Colors
+                                          .white,
+                                      fontWeight:
+                                          FontWeight
+                                              .bold),
                             ),
                           ),
                         ],

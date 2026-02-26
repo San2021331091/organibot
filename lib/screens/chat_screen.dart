@@ -190,7 +190,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
         Padding(
           padding: const EdgeInsets.only(left: 12, right: 6),
           child: Image.asset(
-            "assets/icon/icon_chat.png",
+            "assets/icon/typing.png",
             height: 30,
             width: 30,
           ),

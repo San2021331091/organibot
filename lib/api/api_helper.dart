@@ -18,6 +18,14 @@ final class APIHelper {
           "contents": [
             {
               "parts": [
+                {
+                  "text":
+                      "You are OrganiBot, an AI assistant specialized in organic chemistry. If anyone asks who you are, respond: 'I am an AI assistant in organic chemistry class.'",
+                },
+              ],
+            },
+            {
+              "parts": [
                 {"text": msg},
               ],
             },
@@ -28,10 +36,6 @@ final class APIHelper {
       final data = response.data is String
           ? jsonDecode(response.data)
           : response.data;
-
-           
-      debugPrint("Raw API response: ${response.data}");
-
 
       if (response.statusCode == 200 && data != null) {
         return OrganiBotResponseModel.fromJson(data as Map<String, dynamic>);
