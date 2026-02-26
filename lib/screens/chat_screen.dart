@@ -176,70 +176,110 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   }
 
   /// ---------------- BOT MESSAGE ---------------- ///
-  Widget botChatBox(MessageModel msgModel, int index) {
-    var time = dateFormat.format(
-        DateTime.fromMillisecondsSinceEpoch(int.parse(msgModel.sendAt)));
+ Widget botChatBox(MessageModel msgModel, int index) {
+  var time = dateFormat.format(
+      DateTime.fromMillisecondsSinceEpoch(int.parse(msgModel.sendAt)));
 
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
-        padding: const EdgeInsets.all(14),
-        constraints: BoxConstraints(
-          maxWidth: MediaQuery.of(context).size.width * 0.75,
-        ),
-        decoration: BoxDecoration(
-          color: AppColors.lightGreenAccentColor,
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+  return Align(
+    alignment: Alignment.centerLeft,
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
 
-            // Animated Bot Text
-            msgModel.isRead == true
-                ? SelectableText(
-                    msgModel.message,
-                    style: AppTextStyles.bodyMedium(color: Colors.white),
-                  )
-                : AnimatedTextKit(
-                    isRepeatingAnimation: false,
-                    displayFullTextOnTap: true,
-                    onFinished: () {
-                      ref.read(messageProvider.notifier).updateMessageRead(index);
-                    },
-                    animatedTexts: [
-                      TypewriterAnimatedText(
-                        msgModel.message,
-                        speed: const Duration(milliseconds: 20),
-                        textStyle: AppTextStyles.bodyLarge(color: Colors.white)
+        /// Chat Icon (Bot Avatar)
+        Padding(
+          padding: const EdgeInsets.only(left: 12, right: 6),
+          child: Image.asset(
+            "assets/icon/icon_chat.png",
+            height: 30,
+            width: 30,
+          ),
+        ),
+
+        /// Message Bubble
+        Expanded(
+          child: Container(
+            margin: const EdgeInsets.symmetric(vertical: 6),
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              color: AppColors.lightGreenAccentColor,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+
+                /// 🔥 SHOW TYPING ICON FIRST
+                if (msgModel.isRead == false) ...[
+                  Row(
+                    children: [
+                      Image.asset(
+                        "assets/icon/icon_typing.png",
+                        height: 22,
+                      ),
+                      const SizedBox(width: 8),
+                      const Text(
+                        "Typing...",
+                        style: TextStyle(color: Colors.white),
                       ),
                     ],
                   ),
+                  const SizedBox(height: 8),
+                ],
 
-            const SizedBox(height: 8),
+                /// Animated Bot Text
+                msgModel.isRead == true
+                    ? SelectableText(
+                        msgModel.message,
+                        style: AppTextStyles.bodyMedium(color: Colors.white),
+                      )
+                    : AnimatedTextKit(
+                        isRepeatingAnimation: false,
+                        displayFullTextOnTap: true,
+                        onFinished: () {
+                          ref
+                              .read(messageProvider.notifier)
+                              .updateMessageRead(index);
+                        },
+                        animatedTexts: [
+                          TypewriterAnimatedText(
+                            msgModel.message,
+                            speed: const Duration(milliseconds: 20),
+                            textStyle:
+                                AppTextStyles.bodyLarge(color: Colors.white),
+                          ),
+                        ],
+                      ),
 
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    Clipboard.setData(ClipboardData(text: msgModel.message));
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Copied to clipboard")),
-                    );
-                  },
-                  child: const Icon(Icons.copy, size: 18,color: Colors.white,),
-                ),
-                Text(
-                  time,
-                  style: AppTextStyles.caption(color: Colors.white),
-                ),
+                const SizedBox(height: 8),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        Clipboard.setData(
+                            ClipboardData(text: msgModel.message));
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                              content: Text("Copied to clipboard")),
+                        );
+                      },
+                      child: const Icon(Icons.copy,
+                          size: 18, color: Colors.white),
+                    ),
+                    Text(
+                      time,
+                      style: AppTextStyles.caption(color: Colors.white),
+                    ),
+                  ],
+                )
               ],
-            )
-          ],
+            ),
+          ),
         ),
-      ),
-    );
-  }
+      ],
+    ),
+  );
+ }
 }
