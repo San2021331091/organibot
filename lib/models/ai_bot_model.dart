@@ -4,38 +4,55 @@ class OrganiBotResponseModel {
   OrganiBotResponseModel({required this.candidates});
 
   factory OrganiBotResponseModel.fromJson(Map<String, dynamic> json) {
+    final rawCandidates = json['candidates'] ?? json['responses'] ?? [];
+    if (rawCandidates is! List) return OrganiBotResponseModel(candidates: []);
+
     return OrganiBotResponseModel(
-      candidates: (json['candidates'] as List<dynamic>?)
-              ?.map((e) => OrganiBotCandidate.fromJson(e))
-              .toList() ??
-          [],
+      candidates: rawCandidates
+          .map((e) {
+            if (e is! Map<String, dynamic>) return null;
+            return OrganiBotCandidate.fromJson(e);
+          })
+          .whereType<OrganiBotCandidate>()
+          .toList(),
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'candidates': candidates.map((e) => e.toJson()).toList(),
-    };
-  }
+  String get firstText {
+    for (var candidate in candidates) {
+      final text = candidate.fullText;
+      if (text.isNotEmpty) return text;
 
-  /// Helper to get first response text directly
-  String get firstText =>
-      candidates.isNotEmpty ? candidates.first.content.fullText : '';
+      // Fallback if content.parts is empty, check direct content.text
+      final directText = candidate.directText;
+      if (directText.isNotEmpty) return directText;
+    }
+    return 'No response from API';
+  }
 }
 
 class OrganiBotCandidate {
   final OrganiBotContent content;
   final String? finishReason;
+  final String? rawText; // fallback if content.parts is empty
 
-  OrganiBotCandidate({
-    required this.content,
-    this.finishReason,
-  });
+  OrganiBotCandidate({required this.content, this.finishReason, this.rawText});
 
   factory OrganiBotCandidate.fromJson(Map<String, dynamic> json) {
+    // If content.parts exists, use it
+    final contentJson = json['content'] ?? {};
+    final content = OrganiBotContent.fromJson(contentJson);
+
+    // If parts are empty, check for text directly
+    String? fallbackText;
+    if (content.parts.isEmpty) {
+      fallbackText = json['content']?['text'] as String? ?? json['text'] as String?;
+    }
+
     return OrganiBotCandidate(
-      content: OrganiBotContent.fromJson(json['content'] ?? {}),
-      finishReason: json['finishReason'],
+      content: content,
+      finishReason: json['finishReason'] as String?,
+      rawText: fallbackText,
     );
   }
 
@@ -43,8 +60,13 @@ class OrganiBotCandidate {
     return {
       'content': content.toJson(),
       'finishReason': finishReason,
+      'rawText': rawText,
     };
   }
+
+  String get fullText => content.fullText;
+
+  String get directText => rawText ?? '';
 }
 
 class OrganiBotContent {
@@ -53,39 +75,27 @@ class OrganiBotContent {
   OrganiBotContent({required this.parts});
 
   factory OrganiBotContent.fromJson(Map<String, dynamic> json) {
+    final partsList = json['parts'] as List<dynamic>? ?? [];
     return OrganiBotContent(
-      parts: (json['parts'] as List<dynamic>?)
-              ?.map((e) => OrganiBotPart.fromJson(e))
-              .toList() ??
-          [],
+      parts: partsList
+          .map((e) => e is Map<String, dynamic> ? OrganiBotPart.fromJson(e) : null)
+          .whereType<OrganiBotPart>()
+          .toList(),
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'parts': parts.map((e) => e.toJson()).toList(),
-    };
+    return {'parts': parts.map((e) => e.toJson()).toList()};
   }
 
-  /// Combine all parts text
-  String get fullText =>
-      parts.map((e) => e.text ?? '').join();
+  String get fullText => parts.map((e) => e.text ?? '').join();
 }
 
 class OrganiBotPart {
   final String? text;
-
   OrganiBotPart({this.text});
-
   factory OrganiBotPart.fromJson(Map<String, dynamic> json) {
-    return OrganiBotPart(
-      text: json['text'],
-    );
+    return OrganiBotPart(text: json['text'] as String?);
   }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'text': text,
-    };
-  }
+  Map<String, dynamic> toJson() => {'text': text};
 }

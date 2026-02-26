@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:organibot/api/urls.dart';
@@ -6,6 +7,8 @@ import 'package:organibot/models/ai_bot_model.dart';
 final class APIHelper {
   final Dio _dio;
   APIHelper() : _dio = Dio();
+
+  /// Sends a message to the bot API
   Future<OrganiBotResponseModel> sendMessageAPI({required String msg}) async {
     try {
       Response response = await _dio.post(
@@ -22,18 +25,26 @@ final class APIHelper {
         },
       );
 
-      if (response.statusCode == 200 && response.data != null) {
-        return OrganiBotResponseModel.fromJson(response.data);
+      final data = response.data is String
+          ? jsonDecode(response.data)
+          : response.data;
+
+           
+      debugPrint("Raw API response: ${response.data}");
+
+
+      if (response.statusCode == 200 && data != null) {
+        return OrganiBotResponseModel.fromJson(data as Map<String, dynamic>);
       } else {
         debugPrint("Failed with status: ${response.statusCode}");
-        throw Exception("API returned status: ${response.statusCode}");
+        return OrganiBotResponseModel(candidates: []);
       }
     } on DioException catch (e) {
       debugPrint("DioException: ${e.message}");
-      throw Exception(e.message);
+      return OrganiBotResponseModel(candidates: []);
     } catch (e) {
       debugPrint("Unknown exception: $e");
-      throw Exception(e.toString());
+      return OrganiBotResponseModel(candidates: []);
     }
   }
 }

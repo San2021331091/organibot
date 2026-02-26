@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:organibot/utils/color.dart';
 import 'package:organibot/utils/utils_helper.dart';
 
 class ChatScreen extends ConsumerStatefulWidget {
@@ -24,10 +25,9 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   void initState() {
     super.initState();
 
-    /// Send first message automatically
+    // Send first message automatically
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(messageProvider.notifier)
-          .sendMessage(message: widget.query);
+      ref.read(messageProvider.notifier).sendMessage(message: widget.query);
     });
   }
 
@@ -46,18 +46,21 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     final listMsg = ref.watch(messageProvider);
-
     scrollToBottom();
 
     return Scaffold(
-      backgroundColor: const Color(0xff0F172A),
+      backgroundColor: AppColors.lightGreenColor,
       appBar: AppBar(
-        backgroundColor: const Color(0xff1E293B),
+        backgroundColor: AppColors.mediumGreenColor,
         centerTitle: true,
-        title: const Text(
+        title: Text(
           "AI OrganiGPT Assistant",
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: AppTextStyles.bodyLarge(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
         ),
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: Column(
         children: [
@@ -80,29 +83,31 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
           /// ---------------- Input Box ---------------- ///
           Container(
             padding: const EdgeInsets.all(12),
-            color: const Color(0xff1E293B),
+            color: AppColors.lightGreenColor,
             child: Row(
               children: [
+                /// Text Field with proper green background
                 Expanded(
                   child: TextField(
                     controller: chatBoxController,
                     style: AppTextStyles.headlineMedium(color: Colors.white),
                     decoration: InputDecoration(
                       hintText: "Ask something...",
-                      hintStyle:
-                         AppTextStyles.caption(color: Colors.white38),
+                      hintStyle: AppTextStyles.caption(color: Colors.white,fontWeight: FontWeight.w600),
                       filled: true,
-                      fillColor: const Color(0xff0F172A),
+                      fillColor: AppColors.mediumGreenColor,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(30),
                         borderSide: BorderSide.none,
                       ),
-                      contentPadding:
-                          const EdgeInsets.symmetric(horizontal: 20),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 20),
                     ),
                   ),
                 ),
+
                 const SizedBox(width: 10),
+
+                /// Send button with gradient green
                 GestureDetector(
                   onTap: () {
                     if (chatBoxController.text.trim().isEmpty) return;
@@ -112,10 +117,20 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
 
                     chatBoxController.clear();
                   },
-                  child: const CircleAvatar(
-                    backgroundColor: Colors.orange,
-                    child:
-                        Icon(Icons.send, color: Colors.white),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          AppColors.lightGreenColor,
+                          AppColors.mediumGreenColor
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      shape: BoxShape.circle,
+                    ),
+                    padding: const EdgeInsets.all(12),
+                    child: const Icon(Icons.send, color: Colors.white),
                   ),
                 )
               ],
@@ -129,21 +144,19 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   /// ---------------- USER MESSAGE ---------------- ///
   Widget userChatBox(MessageModel msgModel) {
     var time = dateFormat.format(
-        DateTime.fromMillisecondsSinceEpoch(
-            int.parse(msgModel.sendAt)));
+        DateTime.fromMillisecondsSinceEpoch(int.parse(msgModel.sendAt)));
 
     return Align(
       alignment: Alignment.centerRight,
       child: Container(
-        margin:
-            const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+        margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
         padding: const EdgeInsets.all(14),
         constraints: BoxConstraints(
           maxWidth: MediaQuery.of(context).size.width * 0.75,
         ),
         decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [Colors.blueAccent, Colors.blue ],
+          gradient: LinearGradient(
+            colors: [AppColors.lightGreenColor, AppColors.mediumGreenColor],
           ),
           borderRadius: BorderRadius.circular(20),
         ),
@@ -152,13 +165,10 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
           children: [
             Text(
               msgModel.message,
-              style: AppTextStyles.bodyLarge(color: Colors.white10),
+              style: AppTextStyles.bodyLarge(color: Colors.white),
             ),
             const SizedBox(height: 4),
-            Text(
-              time,
-              style: AppTextStyles.bodyMedium(color: Colors.white12)
-            ),
+            Text(time, style: AppTextStyles.bodyMedium(color: Colors.white70)),
           ],
         ),
       ),
@@ -168,48 +178,41 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   /// ---------------- BOT MESSAGE ---------------- ///
   Widget botChatBox(MessageModel msgModel, int index) {
     var time = dateFormat.format(
-        DateTime.fromMillisecondsSinceEpoch(
-            int.parse(msgModel.sendAt)));
+        DateTime.fromMillisecondsSinceEpoch(int.parse(msgModel.sendAt)));
 
     return Align(
       alignment: Alignment.centerLeft,
       child: Container(
-        margin:
-            const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+        margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
         padding: const EdgeInsets.all(14),
         constraints: BoxConstraints(
           maxWidth: MediaQuery.of(context).size.width * 0.75,
         ),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppColors.lightGreenAccentColor,
           borderRadius: BorderRadius.circular(20),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
 
-            /// Animated Bot Text
+            // Animated Bot Text
             msgModel.isRead == true
                 ? SelectableText(
-                    msgModel.message ,
-                    style: const TextStyle(
-                        color: Colors.black87),
+                    msgModel.message,
+                    style: AppTextStyles.bodyMedium(color: Colors.white),
                   )
                 : AnimatedTextKit(
                     isRepeatingAnimation: false,
                     displayFullTextOnTap: true,
                     onFinished: () {
-                      ref
-                          .read(messageProvider.notifier)
-                          .updateMessageRead(index);
+                      ref.read(messageProvider.notifier).updateMessageRead(index);
                     },
                     animatedTexts: [
                       TypewriterAnimatedText(
                         msgModel.message,
-                        speed: const Duration(
-                            milliseconds: 20),
-                        textStyle: const TextStyle(
-                            color: Colors.black87),
+                        speed: const Duration(milliseconds: 20),
+                        textStyle: AppTextStyles.bodyLarge(color: Colors.white)
                       ),
                     ],
                   ),
@@ -217,29 +220,20 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
             const SizedBox(height: 8),
 
             Row(
-              mainAxisAlignment:
-                  MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 GestureDetector(
                   onTap: () {
-                    Clipboard.setData(
-                        ClipboardData(text: msgModel.message));
-                    ScaffoldMessenger.of(context)
-                        .showSnackBar(
-                      const SnackBar(
-                        content:
-                            Text("Copied to clipboard"),
-                      ),
+                    Clipboard.setData(ClipboardData(text: msgModel.message));
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text("Copied to clipboard")),
                     );
                   },
-                  child: const Icon(Icons.copy,
-                      size: 18),
+                  child: const Icon(Icons.copy, size: 18,color: Colors.white,),
                 ),
                 Text(
                   time,
-                  style: const TextStyle(
-                      fontSize: 10,
-                      color: Colors.black45),
+                  style: AppTextStyles.caption(color: Colors.white),
                 ),
               ],
             )
