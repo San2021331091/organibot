@@ -2,7 +2,7 @@
        <!-- Required Permissions -->
     <uses-permission android:name="android.permission.INTERNET" />
     <application
-        android:label="Organibot"
+        android:label="OrganiGPT"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

@@ -1,61 +1,66 @@
 import 'package:flutter/material.dart';
 
+/// Modern and reusable text styles for AI Bot app
+final class AppTextStyles {
+  static const String _fontFamily = 'Primary';
 
-TextStyle mTextStyle30({
-  Color fontColor = Colors.black,
-  FontWeight fontWeight = FontWeight.normal,
-}){
-  return TextStyle(
+  static TextStyle headlineLarge({
+    Color color = Colors.black,
+    FontWeight fontWeight = FontWeight.bold,
+  }) {
+    return TextStyle(
       fontSize: 30,
-      color: fontColor,
+      color: color,
       fontWeight: fontWeight,
-      fontFamily: 'primary'
-  );
-}
+      fontFamily: _fontFamily,
+    );
+  }
 
-TextStyle mTextStyle25({
-  Color fontColor = Colors.black,
-  FontWeight fontWeight = FontWeight.normal,
-}){
-  return TextStyle(
+  static TextStyle headlineMedium({
+    Color color = Colors.black,
+    FontWeight fontWeight = FontWeight.w600,
+  }) {
+    return TextStyle(
       fontSize: 25,
-      color: fontColor,
+      color: color,
       fontWeight: fontWeight,
-      fontFamily: 'primary'
-  );
-}
+      fontFamily: _fontFamily,
+    );
+  }
 
-TextStyle mTextStyle18({
-  Color fontColor = Colors.black,
-  FontWeight fontWeight = FontWeight.normal,
-}){
-  return TextStyle(
+  static TextStyle bodyLarge({
+    Color color = Colors.black87,
+    FontWeight fontWeight = FontWeight.normal,
+  }) {
+    return TextStyle(
       fontSize: 18,
-      color: fontColor,
+      color: color,
       fontWeight: fontWeight,
-      fontFamily: 'primary'
-  );
-}
+      fontFamily: _fontFamily,
+    );
+  }
 
-TextStyle mTextStyle15({
-  Color fontColor = Colors.black,
-  FontWeight fontWeight = FontWeight.normal,
-}){
-  return TextStyle(
+  static TextStyle bodyMedium({
+    Color color = Colors.black54,
+    FontWeight fontWeight = FontWeight.normal,
+  }) {
+    return TextStyle(
       fontSize: 15,
-      color: fontColor,
+      color: color,
       fontWeight: fontWeight,
-      fontFamily: 'primary'
-  );
-}
-TextStyle mTextStyle11({
-  Color fontColor = Colors.black,
-  FontWeight fontWeight = FontWeight.normal,
-}){
-  return TextStyle(
+      fontFamily: _fontFamily,
+    );
+  }
+
+  static TextStyle caption({
+    Color color = Colors.black45,
+    FontWeight fontWeight = FontWeight.normal,
+  }) {
+    return TextStyle(
       fontSize: 11,
+      color: color,
       fontWeight: fontWeight,
-      color: fontColor,
-      fontFamily: 'primary'
-  );
+      fontFamily: _fontFamily,
+    );
+  }
 }
